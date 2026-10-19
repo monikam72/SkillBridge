@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e8efff, #f5eaff);
+        }
+
+        .container {
+            width: 350px;
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px #00000018;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5546d9;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #5546d9;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #5546d9;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4032b5;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: #24834a;
+            font-size: 14px;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #5546d9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>SkillBridge</h1>
+    <p class="subtitle">Learn together. Grow together.</p>
+    <p th:if="${param.error}" style="color:red;">
+        Invalid email or password. Please try again.
+    </p>
+
+    <p th:if="${param.registered}" style="color:green;">
+        Registration successful! Please log in.
+    </p>
+    <form th:action="@{/login}" method="post">
+
+        <label for="username">College Email</label>
+        <input type="email" id="username" name="username"
+               placeholder="Enter your email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Enter your password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p class="message" th:if="${param.logout}">
+        You have logged out successfully.
+    </p>
+
+    <p class="register">
+        New to SkillBridge?
+        <a href="/register">Create an account</a>
+    </p>
+
+</div>
+</body>
+</html>

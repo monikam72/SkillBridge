@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkillBridge Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #24304a;
+            margin: 0;
+            padding: 25px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .question {
+            background: white;
+            padding: 20px;
+            margin: 18px 0;
+            border-radius: 12px;
+        }
+
+        label {
+            display: block;
+            padding: 9px 0;
+            cursor: pointer;
+        }
+
+        button {
+            background: #4338ca;
+            color: white;
+            border: 0;
+            padding: 13px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <h1 th:text="${quiz.quizTitle}">Java Basics Quiz</h1>
+    <p>Choose one answer for each question.</p>
+
+    <div th:if="${#lists.isEmpty(questions)}">
+        <p>No questions are available for this quiz yet.</p>
+    </div>
+
+    <form th:unless="${#lists.isEmpty(questions)}"
+          th:action="@{/quiz/{id}/submit(id=${quiz.quizId})}"
+          method="post">
+
+        <div class="question" th:each="q : ${questions}">
+            <h3 th:text="${q.questionText}">Question</h3>
+
+            <label>
+                <input type="radio"
+                       th:name="${'question_' + q.questionId}"
+                       value="A" required>
+                <span th:text="${q.optionA}">Option A</span>
+            </label>
+
+            <label>
+                <input type="radio"
+                       th:name="${'question_' + q.questionId}"
+                       value="B">
+                <span th:text="${q.optionB}">Option B</span>
+            </label>
+
+            <label>
+                <input type="radio"
+                       th:name="${'question_' + q.questionId}"
+                       value="C">
+                <span th:text="${q.optionC}">Option C</span>
+            </label>
+
+            <label>
+                <input type="radio"
+                       th:name="${'question_' + q.questionId}"
+                       value="D">
+                <span th:text="${q.optionD}">Option D</span>
+            </label>
+        </div>
+
+        <button type="submit">Submit Quiz</button>
+
+    </form>
+
+    <a class="back-link" href="/assessments">
+        ← Back to Assessments
+    </a>
+</main>
+</body>
+</html>

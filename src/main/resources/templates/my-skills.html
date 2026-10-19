@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Skills | SkillBridge</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px 16px;
+            background: #f5f7f6;
+            color: #20352e;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .back {
+            color: #287a5b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        h1 { margin-bottom: 8px; }
+
+        .subtitle {
+            color: #718078;
+            margin-bottom: 28px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-radius: 16px;
+            border: 1px solid #e3ebe6;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin: 16px 0 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d6e0d9;
+            border-radius: 8px;
+            background: white;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #1d5946;
+            color: white;
+            border: 0;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 12px;
+            background: #e3f1e9;
+            color: #176447;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        .skill-item {
+            padding: 15px;
+            border: 1px solid #e3ebe6;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 9px;
+            margin-top: 7px;
+            background: #e3f1e9;
+            color: #176447;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .empty { color: #718078; }
+
+        @media (min-width: 650px) {
+            .fields {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a class="back" href="/home">← Back to Dashboard</a>
+
+    <h1>My Skills 🎯</h1>
+    <p class="subtitle">
+        Choose what you can teach and what you want to learn.
+    </p>
+
+    <div class="panel">
+        <h2>Add a skill</h2>
+
+        <p class="message" th:if="${message}"
+           th:text="${message}"></p>
+
+        <form th:action="@{/my-skills}" method="post">
+
+            <label for="skillId">Select Skill</label>
+            <select id="skillId" name="skillId" required>
+                <option value="">Choose a skill</option>
+                <option th:each="skill : ${skills}"
+                        th:value="${skill.skillId}"
+                        th:text="${skill.skillName}">
+                    Java
+                </option>
+            </select>
+
+            <div class="fields">
+                <div>
+                    <label for="skillType">I want to</label>
+                    <select id="skillType" name="skillType" required>
+                        <option value="LEARN">Learn this skill</option>
+                        <option value="TEACH">Teach this skill</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="proficiency">My current level</label>
+                    <select id="proficiency" name="proficiency" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Save My Skill</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h2>My saved skills</h2>
+
+        <p class="empty"
+           th:if="${#lists.isEmpty(mySkills)}">
+            You haven't added any skills yet. Add your first skill above!
+        </p>
+
+        <div class="skill-item" th:each="item : ${mySkills}">
+            <strong th:text="${item.skill.skillName}">Java</strong>
+            <br>
+            <span class="tag"
+                  th:text="${item.skillType == 'TEACH'
+                    ? 'I can teach' : 'I want to learn'}">
+                I want to learn
+            </span>
+            <span class="tag"
+                  th:text="${item.proficiency}">
+                Beginner
+            </span>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

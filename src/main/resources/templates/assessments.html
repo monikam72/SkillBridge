@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Assessments</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #24304a;
+        }
+
+        header {
+            background: #4338ca;
+            color: white;
+            padding: 25px 8%;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .filter, .quiz-card {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 15px #0000000a;
+        }
+
+        select, button {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        button, .start-link {
+            background: #4338ca;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .tag {
+            color: #4338ca;
+            background: #eef2ff;
+            padding: 6px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 13px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            background: white;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🧠 Skill Assessment Center</h1>
+    <p>Test your knowledge. Track your progress. Keep learning!</p>
+</header>
+
+<main>
+
+    <h2>Explore Quizzes</h2>
+    <p>Choose a skill and find a quiz to test your knowledge.</p>
+
+    <form class="filter" action="/assessments" method="get">
+        <label for="skillId"><strong>Choose a skill:</strong></label>
+        <select id="skillId" name="skillId">
+            <option value="">All Skills</option>
+            <option th:each="skill : ${skills}"
+                    th:value="${skill.skillId}"
+                    th:text="${skill.skillName}"
+                    th:selected="${selectedSkillId != null and selectedSkillId == skill.skillId}">
+            </option>
+        </select>
+        <button type="submit">Find Quizzes</button>
+    </form>
+
+    <div th:if="${#lists.isEmpty(quizzes)}" class="empty">
+        <h3>No quizzes available yet</h3>
+        <p>More skill assessments will be added soon!</p>
+    </div>
+
+    <div th:each="quiz : ${quizzes}" class="quiz-card">
+        <span class="tag"
+              th:text="${quiz.skill.skillName}">Java</span>
+
+        <h3 th:text="${quiz.quizTitle}">Java Basics Quiz</h3>
+        <p>Test your understanding with multiple-choice questions.</p>
+
+        <a class="start-link"
+           th:href="@{/quiz/{id}(id=${quiz.quizId})}">
+            Start Quiz →
+        </a>
+    </div>
+
+    <p><a href="/home">← Back to Dashboard</a></p>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Register</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8efff, #f5eaff);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px #00000018;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5546d9;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        input:focus {
+            outline: 2px solid #5546d9;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #5546d9;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4032b5;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #5546d9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>SkillBridge</h1>
+    <p class="subtitle">Create your student account</p>
+
+    <form th:action="@{/register}" method="post">
+
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullName"
+               placeholder="Enter your full name" required>
+
+        <label for="email">College Email</label>
+        <input type="email" id="email" name="email"
+               placeholder="Enter your email" required>
+
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department"
+               placeholder="e.g. CSE" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Create a password"
+               minlength="8" required>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <p class="login">
+        Already registered?
+        <a href="/login">Login here</a>
+    </p>
+
+</div>
+</body>
+</html>

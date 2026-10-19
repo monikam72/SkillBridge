@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Progress | SkillBridge</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #243047;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #16845b;
+        }
+
+        .subtitle {
+            color: #687386;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin: 18px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+
+        .score {
+            color: #16845b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #687386;
+            font-size: 14px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #16845b;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            margin: 8px 8px 0 0;
+        }
+
+        .btn:hover {
+            background: #106b49;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .chart-container {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>My Learning Progress 📊</h1>
+    <p class="subtitle">
+        Track your quiz scores and celebrate your learning journey!
+    </p>
+
+    <div th:if="${#lists.isEmpty(attempts)}" class="empty">
+        <h3>No quiz attempts yet!</h3>
+        <p>Complete a quiz to see your progress here.</p>
+        <a th:href="@{/assessments}" class="btn">Explore Quizzes</a>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(attempts)}">
+
+        <div class="card">
+            <h2>Quiz Performance</h2>
+            <p>Your percentage score for each attempt.</p>
+
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+
+            <p id="chartMessage" style="color:#687386"></p>
+        </div>
+
+        <div th:each="attempt : ${attempts}" class="card">
+            <h2 th:text="${attempt.quiz.quizTitle}">Quiz Name</h2>
+
+            <p class="score">
+                Score:
+                <span th:text="${attempt.score}">0</span> /
+                <span th:text="${attempt.totalQuestions}">5</span>
+            </p>
+
+            <p>
+                Percentage:
+                <strong th:text="${attempt.totalQuestions > 0
+                    ? #numbers.formatDecimal(
+                        attempt.score * 100.0 / attempt.totalQuestions, 1, 2)
+                    : '0.00'} + '%'">0%</strong>
+            </p>
+
+            <p class="date">
+                Attempted on:
+                <span th:text="${attempt.attemptedAt != null
+                    ? #temporals.format(attempt.attemptedAt, 'dd-MM-yyyy HH:mm')
+                    : 'Not available'}">Date</span>
+            </p>
+        </div>
+
+    </div>
+
+    <a th:href="@{/home}" class="btn">Dashboard</a>
+    <a th:href="@{/assessments}" class="btn">Take Another Quiz</a>
+
+</div>
+
+<script th:inline="javascript">
+    const attempts = /*[[${attempts}]]*/ [];
+
+    const canvas = document.getElementById('progressChart');
+
+    if (canvas && typeof Chart !== 'undefined') {
+        const labels = attempts.map((attempt, index) =>
+            attempt.quiz.quizTitle + ' (' + (index + 1) + ')'
+        ).reverse();
+
+        const scores = attempts.map(attempt =>
+            attempt.totalQuestions > 0
+                ? Number((attempt.score * 100 / attempt.totalQuestions).toFixed(2))
+                : 0
+        ).reverse();
+
+        new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Score (%)',
+                    data: scores,
+                    backgroundColor: '#35a875',
+                    borderColor: '#16845b',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Quiz Attempts'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Score: ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } else if (canvas) {
+        document.getElementById('chartMessage').textContent =
+            'The chart library could not load. Check your internet connection.';
+    }
+</script>
+
+</body>
+</html>

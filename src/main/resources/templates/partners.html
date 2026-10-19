@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learning Partners | SkillBridge</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px 16px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f7f6;
+            color: #20352e;
+        }
+
+        .container { max-width: 900px; margin: auto; }
+
+        a { color: #287a5b; text-decoration: none; }
+
+        h1 { margin-bottom: 8px; }
+
+        .subtitle { color: #718078; margin-bottom: 28px; }
+
+        .panel, .partner {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border: 1px solid #e3ebe6;
+            border-radius: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 9px;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        select {
+            border: 1px solid #d6e0d9;
+            background: white;
+        }
+
+        button {
+            margin-top: 12px;
+            background: #1d5946;
+            color: white;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .partner h3 { margin: 0 0 8px; }
+
+        .muted { color: #718078; font-size: 14px; }
+
+        .tag {
+            display: inline-block;
+            margin: 8px 5px 0 0;
+            padding: 6px 10px;
+            background: #e3f1e9;
+            color: #176447;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            color: #718078;
+        }
+
+        @media (min-width: 600px) {
+            .filter-fields {
+                display: grid;
+                grid-template-columns: 1fr 180px;
+                gap: 15px;
+                align-items: end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a href="/home">← Back to Dashboard</a>
+
+    <h1>Find Learning Partners 🤝</h1>
+    <p class="subtitle">
+        Discover fellow students who can help you learn a new skill.
+    </p>
+
+    <form class="panel" th:action="@{/partners}" method="get">
+        <div class="filter-fields">
+            <div>
+                <label for="skillId">Find someone who can teach</label>
+                <select id="skillId" name="skillId">
+                    <option value="">All skills</option>
+                    <option th:each="skill : ${skills}"
+                            th:value="${skill.skillId}"
+                            th:text="${skill.skillName}"
+                            th:selected="${selectedSkillId != null
+                                and selectedSkillId.equals(skill.skillId)}">
+                        Java
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit">Search Partners</button>
+        </div>
+    </form>
+
+    <h2>Available Students</h2>
+
+    <p class="empty" th:if="${#lists.isEmpty(partners)}">
+        No learning partners found for this skill yet.
+        Try another skill or invite a classmate to join SkillBridge!
+    </p>
+
+    <div class="partner" th:each="partner : ${partners}">
+        <h3 th:text="${partner.user.fullName}">Student Name</h3>
+
+        <p class="muted">
+            Department:
+            <span th:text="${partner.user.department}">Department</span>
+        </p>
+
+        <span class="tag"
+              th:text="${partner.skill.skillName}">
+            Java
+        </span>
+
+        <span class="tag"
+              th:text="${partner.proficiency}">
+            Intermediate
+        </span>
+
+        <span class="tag">Can teach</span>
+    </div>
+
+</div>
+</body>
+</html>

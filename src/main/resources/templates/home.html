@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f7f6;
+            color: #20352e;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 235px;
+            flex-shrink: 0;
+            background: #173d35;
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #b9d6ca;
+            font-size: 12px;
+            margin-bottom: 40px;
+        }
+
+        .nav-title {
+            color: #a9c5ba;
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 12px;
+            margin-bottom: 8px;
+            border-radius: 9px;
+            color: #e4eee9;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #2d594d;
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 30px;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #73978a;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #2d594d;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            padding: 32px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .topbar p {
+            color: #718078;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .profile {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        /* Welcome section */
+        .welcome {
+            background: #e3f1e9;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 30px;
+        }
+
+        .welcome small {
+            color: #34745b;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .welcome h2 {
+            font-size: clamp(25px, 3vw, 34px);
+            margin: 15px 0 10px;
+        }
+
+        .welcome p {
+            color: #5b7165;
+            line-height: 1.7;
+            max-width: 550px;
+        }
+
+        /* Statistics cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e3ebe5;
+            border-radius: 15px;
+            padding: 23px;
+            text-decoration: none;
+            color: #20352e;
+            box-shadow: 0 4px 12px #20352e08;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 0;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px #20352e12;
+        }
+
+        .stat-card p {
+            color: #718078;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h2 {
+            color: #236b50;
+            font-size: 27px;
+            overflow-wrap: anywhere;
+        }
+
+        .progress-card {
+            background: #edf6f0;
+        }
+
+        .progress-card h2 {
+            font-size: 20px;
+        }
+
+        /* Feature cards */
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 18px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .feature {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            border: 1px solid #e8eeea;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px #20352e12;
+        }
+
+        .feature-icon {
+            font-size: 27px;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            color: #77847d;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Popular skills */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill {
+            background: white;
+            border: 1px solid #e0e9e3;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 35px;
+            color: #859189;
+            font-size: 12px;
+        }
+
+        /* Tablet */
+        @media (max-width: 950px) {
+            .sidebar {
+                width: 210px;
+                padding: 25px 15px;
+            }
+
+            .main {
+                padding: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 750px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .tagline {
+                margin-bottom: 18px;
+            }
+
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav-title {
+                width: 100%;
+            }
+
+            .nav-link {
+                margin-bottom: 0;
+            }
+
+            .sidebar-bottom {
+                padding-top: 15px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .welcome {
+                padding: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">SkillBridge.</div>
+        <div class="tagline">Learn together. Grow together.</div>
+
+        <nav>
+            <div class="nav-title">WORKSPACE</div>
+
+            <a th:href="@{/home}" class="nav-link active">
+                ⌂ &nbsp; Dashboard
+            </a>
+
+            <a href="#skills" class="nav-link">
+                ▤ &nbsp; Explore Skills
+            </a>
+
+            <a th:href="@{/partners}" class="nav-link">
+                ♧ &nbsp; Learning Partners
+            </a>
+
+            <a th:href="@{/learning-hub}" class="nav-link">
+                📚 &nbsp; Skill Learning Hub
+            </a>
+
+            <a th:href="@{/assessments}" class="nav-link">
+                🧠 &nbsp; Skill Assessment Center
+            </a>
+
+            <a th:href="@{/progress}" class="nav-link">
+                📈 &nbsp; My Progress
+            </a>
+
+            <a th:href="@{/my-skills}" class="nav-link">
+                🎯 &nbsp; My Skills
+            </a>
+
+            <a th:href="@{/leaderboard}" class="nav-link">
+                🏆 Leaderboard
+            </a>
+
+            <a th:href="@{/my-skills}" class="nav-link">
+                ✧ &nbsp; Teach &amp; Learn
+            </a>
+
+            <a href="#requests" class="nav-link">
+                ✉ &nbsp; My Requests
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit">
+                    ↪ &nbsp; Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Your personal space to learn and share.</p>
+            </div>
+
+            <div class="profile">
+                👤 <span th:text="${studentName}">Student</span>
+                <br>
+                <small th:text="${department}">Department</small>
+
+                <!-- Achievement Badge -->
+                <div th:if="${hasFirstQuizBadge}"
+                     style="background: #e7f7ed;
+            border: 1px solid #b8e5c8;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;">
+
+                    <div style="font-size: 35px;">🏅</div>
+
+                    <div>
+                        <h3 style="margin: 0 0 6px; color: #16845b;">
+                            First Quiz Completed!
+                        </h3>
+
+                        <p style="margin: 0; color: #486454;">
+                            Great start! You've earned your first SkillBridge achievement.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Quiz Explorer Badge -->
+            <div th:if="${hasQuizExplorerBadge}"
+                 style="background:#fff6df;
+            border:1px solid #f0d58a;
+            padding:16px 20px;
+            border-radius:12px;
+            margin:15px 0;
+            display:flex;
+            align-items:center;
+            gap:14px;">
+
+                <div style="font-size:35px;">🏆</div>
+
+                <div>
+                    <h3 style="margin:0 0 6px;color:#946c00;">
+                        Quiz Explorer
+                    </h3>
+                    <p style="margin:0;color:#75602c;">
+                        Amazing! You've completed five quiz attempts.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Perfect Score Badge -->
+            <div th:if="${hasPerfectScoreBadge}"
+                 style="background:#e9f2ff;
+            border:1px solid #b9d1f5;
+            padding:16px 20px;
+            border-radius:12px;
+            margin:15px 0;
+            display:flex;
+            align-items:center;
+            gap:14px;">
+
+                <div style="font-size:35px;">⭐</div>
+
+                <div>
+                    <h3 style="margin:0 0 6px;color:#2459a6;">
+                        Perfect Score
+                    </h3>
+                    <p style="margin:0;color:#405a7e;">
+                        Outstanding! You answered every question correctly in a quiz.
+                    </p>
+                </div>
+            </div>
+
+        </header>
+
+        <section class="welcome">
+            <small>YOUR LEARNING JOURNEY STARTS HERE</small>
+
+            <h2>
+                Welcome, <span th:text="${studentName}">Student</span>! 👋
+            </h2>
+
+            <p>
+                Discover new skills, connect with talented classmates,
+                and share your knowledge. Every student has something
+                valuable to teach and something new to learn.
+            </p>
+        </section>
+
+        <!-- Dashboard Statistics -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <p>Quizzes Attempted</p>
+                <h2 th:text="${totalAttempts}">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Overall Score</p>
+                <h2>
+                    <span th:text="${#numbers.formatDecimal(averagePercentage, 1, 2)}">0.00</span>%
+                </h2>
+            </div>
+
+            <a th:href="@{/progress}" class="stat-card progress-card">
+                <p>Learning Journey</p>
+                <h2>View Progress →</h2>
+            </a>
+
+        </section>
+
+        <!-- Learning Goal -->
+        <section style="background:white;
+                        padding:24px;
+                        margin-bottom:32px;
+                        border-radius:15px;
+                        border:1px solid #e3ebe5;
+                        box-shadow:0 4px 12px #20352e08;">
+
+            <h2 style="color:#236b50;margin-bottom:12px;">
+                🎯 My Learning Goal
+            </h2>
+
+            <p style="margin-bottom:18px;">
+                Complete 5 quiz attempts to reach your goal!
+            </p>
+
+            <div style="display:flex;
+                        justify-content:space-between;
+                        margin-bottom:10px;">
+                <span>Quizzes completed</span>
+                <strong>
+                    <span th:text="${totalAttempts}">0</span> / 5
+                </strong>
+            </div>
+
+            <div style="background:#e5eee8;
+                        height:10px;
+                        border-radius:10px;
+                        overflow:hidden;">
+
+                <div th:style="'width:' + ${totalAttempts >= 5 ? 100 : totalAttempts * 20} + '%; background:#16845b; height:10px; border-radius:10px;'">
+                </div>
+
+            </div>
+
+            <p th:if="${totalAttempts < 5}"
+               style="color:#718078;margin-top:14px;">
+                Only <strong th:text="${5 - totalAttempts}">5</strong>
+                more quiz attempts to reach your goal. Keep going!
+            </p>
+
+            <p th:if="${totalAttempts >= 5}"
+               style="color:#16845b;font-weight:bold;margin-top:14px;">
+                🎉 Congratulations! You've reached your learning goal!
+            </p>
+
+        </section>
+
+        <h2 class="section-title">What would you like to do?</h2>
+
+        <section class="feature-grid">
+
+            <a href="#skills" class="feature">
+                <div class="feature-icon">📚</div>
+                <h3>Explore Skills</h3>
+                <p>Discover subjects and skills you want to learn.</p>
+            </a>
+
+            <a th:href="@{/partners}" class="feature">
+                <div class="feature-icon">🤝</div>
+                <h3>Find Learning Partners</h3>
+                <p>Connect with students who can guide your learning.</p>
+            </a>
+
+            <a th:href="@{/my-skills}" class="feature">
+                <div class="feature-icon">💡</div>
+                <h3>Share Your Knowledge</h3>
+                <p>Teach others and strengthen your own skills.</p>
+            </a>
+
+            <a href="#requests" class="feature">
+                <div class="feature-icon">💬</div>
+                <h3>My Learning Requests</h3>
+                <p>Keep track of the learning connections you make.</p>
+            </a>
+
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Popular Skills</h2>
+
+            <div class="skills">
+                <span class="skill"
+                      th:each="skill : ${skills}"
+                      th:text="${skill.skillName}">
+                    Java
+                </span>
+            </div>
+        </section>
+
+        <div class="footer">
+            © 2026 SkillBridge · Built for students, powered by collaboration.
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

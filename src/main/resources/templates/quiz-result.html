@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Result | SkillBridge</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #24304a;
+      margin: 0;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .result-card {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px #00000010;
+    }
+
+    .score {
+      font-size: 42px;
+      font-weight: bold;
+      color: #4338ca;
+      margin: 25px 0;
+    }
+
+    .button {
+      display: inline-block;
+      background: #4338ca;
+      color: white;
+      padding: 12px 22px;
+      margin: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      background: #3730a3;
+    }
+  </style>
+</head>
+
+<body>
+<div class="result-card">
+
+  <h1>Quiz Completed! 🎉</h1>
+
+  <h2 th:text="${quizTitle}">Java Basics Quiz</h2>
+
+  <p>Your score</p>
+
+  <div class="score">
+    <span th:text="${score}">4</span>
+    /
+    <span th:text="${total}">5</span>
+  </div>
+
+  <h3>
+    Percentage:
+    <span th:text="${percentage}">80</span>%
+  </h3>
+
+  <p>Keep learning and improving your skills!</p>
+
+  <a href="/assessments" class="button">
+    Try Another Quiz
+  </a>
+
+  <a href="/home" class="button">
+    Back to Dashboard
+  </a>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge - Leaderboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26352d;
+        }
+
+        header {
+            background: #16845b;
+            color: white;
+            padding: 22px 7%;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h1 {
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #68766d;
+        }
+
+        .table-card {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px #0000000a;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e8eee9;
+        }
+
+        th {
+            color: #16845b;
+            background: #f0f8f3;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: #16845b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px 10px;
+            color: #68766d;
+        }
+
+        .actions {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #16845b;
+            color: white;
+        }
+
+        .secondary {
+            background: #e5f3eb;
+            color: #16845b;
+        }
+
+        @media (max-width: 600px) {
+            .table-card {
+                padding: 12px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>SkillBridge 🏆</h2>
+</header>
+
+<main>
+    <section class="intro">
+        <h1>Student Leaderboard</h1>
+        <p>Celebrate learning progress and quiz achievements!</p>
+    </section>
+
+    <section class="table-card">
+        <table th:if="${not #lists.isEmpty(leaderboard)}">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Student</th>
+                <th>Quizzes Attempted</th>
+                <th>Overall Score</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="student : ${leaderboard}">
+                <td class="rank"
+                    th:text="${student.rank}"></td>
+
+                <td th:text="${student.studentName}"></td>
+
+                <td th:text="${student.attempts}"></td>
+
+                <td th:text="${#numbers.formatDecimal(student.percentage, 1, 2) + '%'}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="empty"
+             th:if="${#lists.isEmpty(leaderboard)}">
+            <h3>No rankings yet!</h3>
+            <p>Complete a quiz to start building the leaderboard.</p>
+        </div>
+    </section>
+
+    <div class="actions">
+        <a th:href="@{/home}" class="btn primary">
+            Back to Dashboard
+        </a>
+
+        <a th:href="@{/assessments}" class="btn secondary">
+            Take a Quiz
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

@@ -109,3 +109,22 @@ The core application features have been implemented and tested locally.
 ---
 
 **SkillBridge — Learn Together. Grow Together.**
+## 📸 Project Screenshots
+
+### 1. Student Dashboard
+![SkillBridge Dashboard](screenshots/dashboard.png)
+
+### 2. Skill Hub
+![SkillBridge Skill Hub](screenshots/Skillhub.png)
+
+### 3. Quiz Interface
+![SkillBridge Quiz](screenshots/quiz.png)
+
+### 4. Available Quizzes
+![SkillBridge Quizzes](screenshots/quizzes.png)
+
+### 5. Learning Progress
+![SkillBridge Progress](screenshots/progress.png)
+
+### 6. Student Leaderboard
+![SkillBridge Leaderboard](screenshots/leaderboard.png)

@@ -128,3 +128,14 @@ The core application features have been implemented and tested locally.
 
 ### 6. Student Leaderboard
 ![SkillBridge Leaderboard](screenshots/leaderboard.png)
+### 7. Learning Requests
+![Learning Requests](screenshots/learningrequest.png)
+
+### 8. Accepted Learning Requests
+![Accepted Requests](screenshots/acceptedrequest.png)
+
+### 9. Private Student Chat
+![Private Chat](screenshots/privatechat.png)
+
+### 10. Chat Message Area
+![Chat Message Area](screenshots/chatmessagearea.png)

@@ -39,16 +39,22 @@
             margin-bottom: 9px;
         }
 
-        select, button {
+        select, button, textarea {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             font-size: 15px;
         }
 
-        select {
+        select, textarea {
             border: 1px solid #d6e0d9;
             background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            margin-top: 10px;
+            font-family: inherit;
         }
 
         button {
@@ -58,6 +64,8 @@
             border: 0;
             cursor: pointer;
         }
+
+        button:hover { background: #287a5b; }
 
         .partner h3 { margin: 0 0 8px; }
 
@@ -80,6 +88,28 @@
             color: #718078;
         }
 
+        .request-link {
+            display: inline-block;
+            margin: 0 0 22px;
+            padding: 10px 15px;
+            background: #173d35;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .notice {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            background: #e3f1e9;
+            color: #176447;
+        }
+
+        .error {
+            background: #fbe9e7;
+            color: #9b3028;
+        }
+
         @media (min-width: 600px) {
             .filter-fields {
                 display: grid;
@@ -99,6 +129,22 @@
     <h1>Find Learning Partners 🤝</h1>
     <p class="subtitle">
         Discover fellow students who can help you learn a new skill.
+    </p>
+
+    <a class="request-link" th:href="@{/requests}">
+        Manage My Learning Requests →
+    </a>
+
+    <p class="notice"
+       th:if="${param.success != null
+           and param.success[0] == 'requestSent'}">
+        Learning request sent successfully!
+    </p>
+
+    <p class="notice error"
+       th:if="${param.error != null
+           and param.error[0] == 'duplicate'}">
+        You already have a pending request for this student and skill.
     </p>
 
     <form class="panel" th:action="@{/partners}" method="get">
@@ -147,6 +193,43 @@
         </span>
 
         <span class="tag">Can teach</span>
+
+        <hr style="border: 0; border-top: 1px solid #e3ebe6; margin: 18px 0;">
+
+        <h3>Request to Learn</h3>
+
+        <p class="muted">
+            Introduce yourself and ask to learn this skill together.
+        </p>
+
+        <form th:action="@{/requests/send}" method="post">
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <input type="hidden"
+                   name="receiverId"
+                   th:value="${partner.user.userId}">
+
+            <input type="hidden"
+                   name="skillId"
+                   th:value="${partner.skill.skillId}">
+
+            <label th:for="${'message-' + partner.user.userId}">
+                Message (optional)
+            </label>
+
+            <textarea
+                    th:id="${'message-' + partner.user.userId}"
+                    name="message"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Hi! I'd like to learn this skill with you."
+            ></textarea>
+
+            <button type="submit">Send Learning Request</button>
+        </form>
     </div>
 
 </div>

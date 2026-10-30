@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge | Learning Requests</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f3f7f5;
+            color: #24352f;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #173d35;
+        }
+
+        .section {
+            background: white;
+            padding: 22px;
+            margin: 22px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .request {
+            border: 1px solid #e0e9e4;
+            border-radius: 9px;
+            padding: 16px;
+            margin: 14px 0;
+        }
+
+        .request h3 {
+            margin-top: 0;
+            color: #173d35;
+        }
+
+        .message {
+            color: #596b63;
+            overflow-wrap: anywhere;
+        }
+
+        button, .back-link, .chat-link {
+            display: inline-block;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin: 5px 5px 0 0;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .accept {
+            background: #176b50;
+            color: white;
+        }
+
+        .decline {
+            background: #fbe9e7;
+            color: #9b3028;
+        }
+
+        .back-link {
+            background: #173d35;
+            color: white;
+        }
+
+        .chat-link {
+            background: #176b50;
+            color: white;
+        }
+
+        .empty {
+            color: #74847c;
+            padding: 10px 0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Learning Requests</h1>
+    <p>Manage your peer-learning requests in SkillBridge.</p>
+
+    <a class="back-link" th:href="@{/partners}">Back to Learning Partners</a>
+
+    <section class="section">
+        <h2>Incoming Requests</h2>
+
+        <p class="empty"
+           th:if="${#lists.isEmpty(incomingRequests)}">
+            You have no pending requests right now.
+        </p>
+
+        <div class="request" th:each="request : ${incomingRequests}">
+            <h3 th:text="${request.requester.fullName}">Student name</h3>
+
+            <p>
+                Wants to connect for:
+                <strong th:text="${request.skill.skillName}">Skill</strong>
+            </p>
+
+            <p class="message">
+                <strong>Message:</strong>
+                <span th:text="${request.message != null and !request.message.isBlank()
+                    ? request.message : 'No message provided'}">Message</span>
+            </p>
+
+            <form th:action="@{/requests/{id}/accept(id=${request.requestId})}"
+                  method="post" style="display:inline">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}">
+                <button class="accept" type="submit">Accept</button>
+            </form>
+
+            <form th:action="@{/requests/{id}/decline(id=${request.requestId})}"
+                  method="post" style="display:inline">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}">
+                <button class="decline" type="submit">Decline</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Outgoing Requests</h2>
+
+        <p class="empty"
+           th:if="${#lists.isEmpty(outgoingRequests)}">
+            You haven't sent any requests yet.
+        </p>
+
+        <div class="request" th:each="request : ${outgoingRequests}">
+            <h3 th:text="${request.receiver.fullName}">Student name</h3>
+
+            <p>
+                Skill:
+                <strong th:text="${request.skill.skillName}">Skill</strong>
+            </p>
+
+            <p>
+                Status:
+                <span class="status" th:text="${request.status}">PENDING</span>
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Accepted Requests</h2>
+
+        <p class="empty"
+           th:if="${#lists.isEmpty(acceptedRequests)}">
+            No requests have been accepted yet.
+        </p>
+
+        <div class="request" th:each="request : ${acceptedRequests}">
+
+            <h3 th:text="${request.skill.skillName}">
+                Skill
+            </h3>
+
+            <p>
+                Connected with:
+                <strong
+                        th:text="${request.requester.userId == currentUser.userId
+                    ? request.receiver.fullName
+                    : request.requester.fullName}">
+                    Student name
+                </strong>
+            </p>
+
+            <span class="status">Status: ACCEPTED</span>
+
+            <br>
+
+            <a class="chat-link"
+               th:href="@{/chat/{id}(id=${request.requestId})}">
+                Open Chat
+            </a>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
